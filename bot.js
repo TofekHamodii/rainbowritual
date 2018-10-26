@@ -51,27 +51,32 @@ if (message.content.startsWith(adminprefix + 'setavatar')) {
 }
 });
 
+var prefix = "-"
 client.on('message', message => {
-    
-    let args = message.content.split(' ').slice(1).join(' ');
-    
-  if (message.content === 'ping') {
-      message.channel.send(`<@-{message.author.id}> Ping..!`)
-  }
-  
-  
-  if (message.content.startsWith('-bc')) {
-          if (!args[0]) {
-message.channel.send("**-bc <message>**");
-return;
-}
-message.guild.members.forEach(m => {
-   if(!message.member.hasPermission('ADMINISTRATOR')) return;
-   m.send(`${args}`);
-
-});
-  }
- 
+  if(message.content.split(' ')[0] == prefix + 'bc') {
+            if(!message.member.hasPermission('ADMINISTRATOR')) return message.reply('⚠ | **لا يوجد لديك صلاحية **');
+        if (message.author.id === client.user.id) return;
+        if (message.guild) {
+       let embed = new Discord.RichEmbed()
+        let args = message.content.split(' ').slice(1).join(' ');
+        if (!args[1]) {
+    message.channel.send(`**$bc <message>**`);
+    return;
+    }
+            message.guild.members.forEach(m => {
+                var bc = new Discord.RichEmbed()
+                .setThumbnail(message.guild.iconURL)
+                .setFooter(`» مرسلة من قبل: ${message.author.username}#${message.author.discriminator}`)
+                .setDescription(args)
+                .setColor('RANDOM')
+                // m.send(`[${m}]`);
+                m.send({embed: bc}).catch(err => {console.log("[Broadcast] Couldn't send message to this user because he's closing his DM!")});
+            });
+            message.channel.send("**📢 | يتم إرسال البرودكسات**");
+    }
+    } else {
+        return;
+    }
 });
 
 client.login(process.env.BOT_TOKEN);

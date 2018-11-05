@@ -16,7 +16,7 @@ client.on('ready', function() {
 
 
 
-const developers = ["452379478618800129","","346343289861046273"]
+const developers = ["507978288250093568","",""]
 const adminprefix = ".";
 client.on('message', message => {
     var argresult = message.content.split(` `).slice(1).join(' ');
@@ -52,7 +52,7 @@ if (message.content.startsWith(adminprefix + 'setavatar')) {
 });
 
 client.on('message', message => {
-        var prefix = '-'; // هنا تقدر تغير البرفكس
+        var prefix = '+'; // هنا تقدر تغير البرفكس
     var command = message.content.split(" ")[0];
     if(command == prefix + 'bc') { // الكوماند {prefix} bc
     if (!message.member.hasPermission('ADMINISTRATOR')) return message.channel.send(`**${message.author.username} يا حلو كيف تبي تسوي برود كاست وما معك *ADMINISTRATOR*`);

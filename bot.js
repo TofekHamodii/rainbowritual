@@ -51,6 +51,7 @@ if (message.content.startsWith(adminprefix + 'setavatar')) {
 }
 });
 
+var prefix = "+"
 client.on('message', message => {
    if(!message.channel.guild) return;
 if(message.content.startsWith(prefix + 'bc')) {

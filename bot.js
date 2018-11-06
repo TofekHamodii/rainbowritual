@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
+var prefix = "+"
 
 
 client.on('ready', function() {
@@ -51,7 +52,6 @@ if (message.content.startsWith(adminprefix + 'setavatar')) {
 }
 });
 
-var prefix = "+"
 client.on('message', message => {
    if(!message.channel.guild) return;
 if(message.content.startsWith(prefix + 'bc')) {

@@ -52,49 +52,50 @@ if (message.content.startsWith(adminprefix + 'setavatar')) {
 });
 
 client.on('message', message => {
-        var prefix = '+'; // هنا تقدر تغير البرفكس
-    var command = message.content.split(" ")[0];
-    if(command == prefix + 'bc') { // الكوماند {prefix} bc
-    if (!message.member.hasPermission('ADMINISTRATOR')) return message.channel.send(`**${message.author.username} يا حلو كيف تبي تسوي برود كاست وما معك *ADMINISTRATOR*`);
-        var args = message.content.split(' ').slice(1).join(' ');
-        if(message.author.bot) return;
-    if(!args) return message.channel.send(`**➥ Useage:** ${prefix}bc كلامك `);
-       
-        let bcSure = new Discord.RichEmbed()
-        .setTitle(`:mailbox_with_mail: **هل انت متأكد انك تريد ارسال رسالتك الى** ${message.guild.memberCount} **عضو**`)
-        .setThumbnail(client.user.avatarURL)
-        .setColor('RANDOM')
-        .setDescription(`**\n:envelope: ➥ رسالتك**\n\n${args}`)
-        .setTimestamp()
-        .setFooter(message.author.tag, message.author.avatarURL)
-       
-        message.channel.send(bcSure).then(msg => {
-            msg.react('✅').then(() => msg.react('❎'));
-            message.delete();
-           
-           
-            let yesEmoji = (reaction, user) => reaction.emoji.name === '✅'  && user.id === message.author.id;
-            let noEmoji = (reaction, user) => reaction.emoji.name === '❎' && user.id === message.author.id;
-           
-            let sendBC = msg.createReactionCollector(yesEmoji);
-            let dontSendBC = msg.createReactionCollector(noEmoji);
-           
-            sendBC.on('collect', r => {
-                message.guild.members.forEach(member => {
-                    member.send(args.replace(`[user]`, member)).catch();
-                    if(message.attachments.first()){
-                        member.sendFile(message.attachments.first().url).catch();
-                    }
-                })
-                message.channel.send(`:timer: **يتم الان الارسال الى** \`\`${message.guild.memberCount}\`\` **عضو**`).then(msg => msg.delete(5000));
-                msg.delete();
-            })
-            dontSendBC.on('collect', r => {
-                msg.delete();
-                message.reply(':white_check_mark: **تم الغاء ارسال رسالتك بنجاح**').then(msg => msg.delete(5000));
-            });
-        })
-    }
+   if(!message.channel.guild) return;
+if(message.content.startsWith(prefix + 'bc')) {
+if(!message.channel.guild) return message.channel.send('**هذا الأمر فقط للسيرفرات**').then(m => m.delete(5000));
+if(!message.member.hasPermission('ADMINISTRATOR')) return      message.channel.send(':no_entry: | You dont have **ADMINISTRATOR** Permission!' );
+let args = message.content.split(" ").join(" ").slice(2 + prefix.length);
+let BcList = new Discord.RichEmbed()
+.setThumbnail(message.author.avatarURL)
+.setAuthor(`محتوى الرساله ${args}`)
+.setDescription(`برودكاست بـ امبد 📝\nبرودكاست بدون امبد✏ \nلديك دقيقه للأختيار قبل الغاء البرودكاست`)
+if (!args) return message.reply('**يجب عليك كتابة كلمة او جملة لإرسال البرودكاست**');message.channel.send(BcList).then(msg => {
+msg.react('📝')
+.then(() => msg.react('✏'))
+.then(() =>msg.react('📝'))
+ 
+let EmbedBcFilter = (reaction, user) => reaction.emoji.name === '📝' && user.id === message.author.id;
+let NormalBcFilter = (reaction, user) => reaction.emoji.name === '✏' && user.id === message.author.id;
+ 
+let EmbedBc = msg.createReactionCollector(EmbedBcFilter, { time: 60000 });
+let NormalBc = msg.createReactionCollector(NormalBcFilter, { time: 60000 });
+ 
+EmbedBc.on("collect", r => {
+message.channel.send(`:ballot_box_with_check: تم ارسال الرساله بنجاح`).then(m => m.delete(5000));
+message.guild.members.forEach(m => {
+var bc = new
+Discord.RichEmbed()
+.setColor('RANDOM')
+  .setTitle('`-Broadcast-`')
+.setAuthor(`Server : ${message.guild.name}`)
+.setFooter(`Sender : ${message.author.username}`)
+.setDescription(`Message : ${args}`)
+.setThumbnail(message.author.avatarURL)
+m.send({ embed: bc })
+msg.delete();
+})
+})
+NormalBc.on("collect", r => {
+  message.channel.send(`:ballot_box_with_check: تم ارسال الرساله بنجاح`).then(m => m.delete(5000));
+message.guild.members.forEach(m => {
+m.send(args);
+msg.delete();
+})
+})
+})
+}
 });
 
 client.login(process.env.BOT_TOKEN);

@@ -1,3 +1,13 @@
+const Discord = require('discord.js');
+const client = new Discord.Client();
+const prefix = "-";
+client.on('ready', () => {
+    console.log(`Logged in as ${client.user.tag}!`);
+    console.log(`in ${client.guilds.size} servers `)
+    console.log(`[AlphaCodes] ${client.users.size}`)
+    client.user.setStatus("online")   
+});
+
 client.on("message", message => {
 
             if (message.content.startsWith(prefix + "bc")) {
